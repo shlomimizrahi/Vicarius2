@@ -17,7 +17,7 @@ Will start the server and listen to requests on 8080 port.
 ## Extra Notes:
 
 * The program can be easily split to more packages / files depending on it's scale of growth, 
-it is currently minimal, but also easily extensible. I.e a developer can easily create a new  directory for a specific handler and it's dependencies / utility code, whereas now, since handlers are quite minimal, there's only 1 handlers.go file that contains all handlers.
+it is currently minimal, but also easily extensible.
 
   
 ## Possible Improvements
