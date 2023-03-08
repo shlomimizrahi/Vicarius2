@@ -29,34 +29,34 @@ public class MainController {
 
     @PostMapping("/createIndex")
     public String createIndex(@RequestBody CreateIndexRequestDTO requestDTO, @RequestParam String indexName) throws IOException {
-        CreateIndexRequest request = new CreateIndexRequest(indexName);
+        final CreateIndexRequest request = new CreateIndexRequest(indexName);
 
-        if (requestDTO.getSettings() != null) {
-            request.settings(requestDTO.getSettings());
+        if (requestDTO.settings() != null) {
+            request.settings(requestDTO.settings());
         }
 
-        if (requestDTO.getMappings() != null) {
-            request.mapping(requestDTO.getMappings());
+        if (requestDTO.mappings() != null) {
+            request.mapping(requestDTO.mappings());
         }
 
-        CreateIndexResponse response = elasticsearchClient.indices().create(request, RequestOptions.DEFAULT);
+        final CreateIndexResponse response = elasticsearchClient.indices().create(request, RequestOptions.DEFAULT);
         return "Index " + indexName + " created with response: " + response.toString();
     }
 
     @PostMapping("/createDocument")
     public String createDocument(@RequestBody Map<String, Object> document, @RequestParam String indexName) throws IOException {
-        IndexRequest indexRequest = new IndexRequest(indexName).source(document, XContentType.JSON);
-        IndexResponse indexResponse = elasticsearchClient.index(indexRequest, RequestOptions.DEFAULT);
+        final IndexRequest indexRequest = new IndexRequest(indexName).source(document, XContentType.JSON);
+        final IndexResponse indexResponse = elasticsearchClient.index(indexRequest, RequestOptions.DEFAULT);
         return "Document created with ID: " + indexResponse.getId();
     }
 
     @GetMapping("/getDocument")
     public Map<String, Object> getDocument(@RequestParam String id, @RequestParam String indexName) throws IOException {
-        SearchRequest searchRequest = new SearchRequest(indexName);
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        final SearchRequest searchRequest = new SearchRequest(indexName);
+        final SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(QueryBuilders.termQuery("_id", id));
         searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
+        final SearchResponse searchResponse = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
         return searchResponse.getHits().getAt(0).getSourceAsMap();
     }
 }
