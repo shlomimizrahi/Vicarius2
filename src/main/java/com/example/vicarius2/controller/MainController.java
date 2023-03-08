@@ -20,7 +20,7 @@ public class MainController {
 
     @PostMapping("/createIndex")
     public String createIndex(@RequestBody CreateIndexRequestDTO requestDTO, @RequestParam String indexName) throws IOException {
-        final String response = elasticsearchClient.CreateIndex(requestDTO, indexName);
+        final String response = elasticsearchClient.CreateIndex(requestDTO.settings(),requestDTO.mappings(), indexName);
         return "Index " + indexName + " created with response: " + response;
     }
 

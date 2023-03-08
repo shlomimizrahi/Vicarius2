@@ -27,10 +27,8 @@ public class ElasticSearchClientService {
         this.restHighLevelClient = restHighLevelClient;
     }
 
-    public String CreateIndex(final CreateIndexRequestDTO requestDTO, final String indexName) throws IOException {
+    public String CreateIndex(final Map<String, Object> settings, final Map<String, Object> mappings, final String indexName) throws IOException {
         final CreateIndexRequest request = new CreateIndexRequest(indexName);
-        final Map<String, Object> settings = requestDTO.settings();
-        final Map<String, Object> mappings = requestDTO.mappings();
 
         if (settings != null) {
             request.settings(settings);
