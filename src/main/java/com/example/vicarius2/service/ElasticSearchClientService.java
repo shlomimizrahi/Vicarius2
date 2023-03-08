@@ -1,6 +1,5 @@
 package com.example.vicarius2.service;
 
-import com.example.vicarius2.CreateIndexRequestDTO;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
@@ -29,6 +28,7 @@ public class ElasticSearchClientService {
 
     public String CreateIndex(final Map<String, Object> settings, final Map<String, Object> mappings, final String indexName) throws IOException {
         final CreateIndexRequest request = new CreateIndexRequest(indexName);
+
 
         if (settings != null) {
             request.settings(settings);
