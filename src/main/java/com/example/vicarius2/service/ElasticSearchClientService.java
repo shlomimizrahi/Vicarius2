@@ -7,9 +7,10 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
-import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,6 @@ public class ElasticSearchClientService {
     public String CreateIndex(final Map<String, Object> settings, final Map<String, Object> mappings, final String indexName) throws IOException {
         final CreateIndexRequest request = new CreateIndexRequest(indexName);
 
-
         if (settings != null) {
             request.settings(settings);
         }
@@ -41,7 +41,7 @@ public class ElasticSearchClientService {
         return restHighLevelClient.indices().create(request, RequestOptions.DEFAULT).toString();
     }
 
-    public String AddDocument(final Map<String, Object> document, final String indexName)  throws IOException {
+    public String AddDocument(final Map<String, Object> document, final String indexName) throws IOException {
         final IndexRequest indexRequest = new IndexRequest(indexName).source(document, XContentType.JSON);
         final IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
         return indexResponse.getId();
@@ -53,6 +53,10 @@ public class ElasticSearchClientService {
         searchSourceBuilder.query(QueryBuilders.termQuery("_id", id));
         searchRequest.source(searchSourceBuilder);
         final SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
-        return searchResponse.getHits().getAt(0).getSourceAsMap();
+        final SearchHits hits = searchResponse.getHits();
+        if (hits.getHits().length == 0) {
+            return null;
+        }
+        return hits.getAt(0).getSourceAsMap();
     }
 }
