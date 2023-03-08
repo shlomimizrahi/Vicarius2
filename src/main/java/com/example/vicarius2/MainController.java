@@ -31,12 +31,15 @@ public class MainController {
     public String createIndex(@RequestBody CreateIndexRequestDTO requestDTO, @RequestParam String indexName) throws IOException {
         final CreateIndexRequest request = new CreateIndexRequest(indexName);
 
-        if (requestDTO.settings() != null) {
-            request.settings(requestDTO.settings());
+        final Map<String, Object> settings = requestDTO.settings();
+        final Map<String, Object> mappings = requestDTO.mappings();
+
+        if (settings != null) {
+            request.settings(settings);
         }
 
-        if (requestDTO.mappings() != null) {
-            request.mapping(requestDTO.mappings());
+        if (mappings != null) {
+            request.mapping(mappings);
         }
 
         final CreateIndexResponse response = elasticsearchClient.indices().create(request, RequestOptions.DEFAULT);
